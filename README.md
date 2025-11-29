@@ -26,15 +26,24 @@ A gamified habit tracking web application that helps students build healthy rout
 
 **Habitly** is a React-based habit tracker designed specifically for students to manage daily routines like studying, sleep, exercise, and reading. The application gamifies habit building with an XP and leveling system, streak tracking with visual feedback, and the ability to backfill past days for demo purposes.
 
-This project was built to demonstrate:
+### Problem Addressed
 
-- **Modern React development** with hooks and Context API
-- **Component-based architecture** with reusable UI components
-- **Local storage persistence** for user data and habits
-- **Gamification mechanics** (XP, levels, streaks, rewards)
-- **Responsive design** with dark/green color scheme
-- **State management** using React Context
-- **Clean code practices** and maintainable architecture
+Students often struggle to maintain consistent healthy habits due to:
+- **Lack of motivation** - No immediate feedback or rewards for completing habits
+- **Poor tracking** - Difficulty visualizing progress over time
+- **Broken streaks** - Losing motivation after missing a single day
+- **Complex interfaces** - Overwhelming habit tracking apps with too many features
+- **No accountability** - Absence of progress milestones or achievement recognition
+
+### Solution Delivered
+
+Habitly solves these problems through:
+- **Gamification mechanics** - XP rewards, levels, and visual rank progression create immediate positive feedback
+- **Streak visualization** - Clear display of current streaks, best streaks, and total completions with emoji indicators
+- **Forgiving system** - Backfill feature allows logging past days, reducing anxiety about broken streaks
+- **Student-focused simplicity** - Clean interface with 8 preset habits tailored to student life
+- **Achievement system** - 6 unique rank tiers with custom artwork provide long-term goals and milestones
+- **One-click completion** - Streamlined daily habit logging with lock mechanism to prevent duplicate entries
 
 ## 🛠️ Tech Stack
 
