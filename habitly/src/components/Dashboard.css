@@ -1,7 +1,15 @@
 .dashboard {
-  min-height: 100vh;
+  min-height: calc(100vh - 40px);
   background: linear-gradient(135deg, #0a0f0d 0%, #111d16 100%);
   padding: 20px;
+}
+
+.dashboard-content {
+  display: flex;
+  flex-direction: row;
+  gap: 24px;
+  align-items: stretch;
+  min-height: calc(100vh - 40px - 180px);
 }
 
 .dashboard-header {
@@ -64,14 +72,16 @@
   transform: translateY(-1px);
 }
 
-/* Level Section */
 .level-section {
+  width: 50%;
   margin-bottom: 32px;
   padding: 24px;
   background: linear-gradient(135deg, #111d16 0%, #0a0f0d 100%);
   border-radius: 16px;
   border: 2px solid #1a3a2e;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
 }
 
 .level-header {
@@ -177,9 +187,12 @@
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
-/* Habits Section */
 .habits-section {
+  max-height: calc(100vh - 40px - 101px);
+  width: 50%;
   margin-bottom: 32px;
+  display: flex;
+  flex-direction: column;
 }
 
 .section-header {
@@ -214,7 +227,6 @@
   box-shadow: 0 4px 8px rgba(16, 185, 129, 0.4);
 }
 
-/* Empty State */
 .empty-state {
   text-align: center;
   padding: 60px 20px;
@@ -257,17 +269,20 @@
   transform: scale(1.05);
 }
 
-/* Habits Grid */
 .habits-grid {
+  overflow-y: scroll;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   gap: 20px;
 }
 
-/* Responsive */
 @media (max-width: 768px) {
   .dashboard {
     padding: 12px;
+  }
+
+  .dashboard-content {
+    flex-direction: column;
   }
 
   .dashboard-header {
@@ -302,5 +317,10 @@
 
   .habits-grid {
     grid-template-columns: 1fr;
+  }
+
+  .level-section,
+  .habits-section {
+    width: 100%;
   }
 }

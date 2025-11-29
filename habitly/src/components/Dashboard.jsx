@@ -29,9 +29,10 @@ export default function Dashboard() {
         </div>
       </header>
 
-      {/* Level & XP Progress Section */}
-      <div className="level-section">
-        <div className="level-header">
+      <div className="dashboard-content">
+        {/* Level & XP Progress Section */}
+        <div className="level-section">
+          <div className="level-header">
           <div className="level-info">
             <h2 className="level-title">
               Level {levelInfo.level} 
@@ -44,56 +45,57 @@ export default function Dashboard() {
               </div>
             )}
           </div>
-          <div className="xp-numbers">
-            <span className="xp-current">{levelInfo.currentXP}</span>
-            <span className="xp-separator">/</span>
-            <span className="xp-total">{levelInfo.xpForNextLevel} XP</span>
+            <div className="xp-numbers">
+              <span className="xp-current">{levelInfo.currentXP}</span>
+              <span className="xp-separator">/</span>
+              <span className="xp-total">{levelInfo.xpForNextLevel} XP</span>
+            </div>
+          </div>
+          
+          <div className="progress-bar-container">
+            <div 
+              className="progress-bar-fill"
+              style={{ width: `${levelInfo.progress}%` }}
+            >
+              <span className="progress-percentage">{Math.round(levelInfo.progress)}%</span>
+            </div>
           </div>
         </div>
-        
-        <div className="progress-bar-container">
-          <div 
-            className="progress-bar-fill"
-            style={{ width: `${levelInfo.progress}%` }}
-          >
-            <span className="progress-percentage">{Math.round(levelInfo.progress)}%</span>
-          </div>
-        </div>
-      </div>
 
-      {/* Habits Section */}
-      <div className="habits-section">
-        <div className="section-header">
-          <h2 className="section-title">My Habits</h2>
-          <button 
-            className="add-habit-button"
-            onClick={() => setShowHabitForm(true)}
-          >
-            + Add Habit
-          </button>
-        </div>
-
-        {habits.length === 0 ? (
-          <div className="empty-state">
-            <p className="empty-icon">📝</p>
-            <h3 className="empty-title">No habits yet!</h3>
-            <p className="empty-description">
-              Create your first habit to start building streaks and leveling up.
-            </p>
+        {/* Habits Section */}
+        <div className="habits-section">
+          <div className="section-header">
+            <h2 className="section-title">My Habits</h2>
             <button 
-              className="empty-action-button"
+              className="add-habit-button"
               onClick={() => setShowHabitForm(true)}
             >
-              Create Your First Habit
+              + Add Habit
             </button>
           </div>
-        ) : (
-          <div className="habits-grid">
-            {habits.map(habit => (
-              <HabitCard key={habit.id} habit={habit} />
-            ))}
-          </div>
-        )}
+
+          {habits.length === 0 ? (
+            <div className="empty-state">
+              <p className="empty-icon">📝</p>
+              <h3 className="empty-title">No habits yet!</h3>
+              <p className="empty-description">
+                Create your first habit to start building streaks and leveling up.
+              </p>
+              <button 
+                className="empty-action-button"
+                onClick={() => setShowHabitForm(true)}
+              >
+                Create Your First Habit
+              </button>
+            </div>
+          ) : (
+            <div className="habits-grid">
+              {habits.map(habit => (
+                <HabitCard key={habit.id} habit={habit} />
+              ))}
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Habit Form Modal */}
