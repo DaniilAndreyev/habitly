@@ -13,6 +13,30 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Custom scrollbar for entire app */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #10b981 rgba(10, 15, 13, 0.5);
+}
+
+*::-webkit-scrollbar {
+  width: 12px;
+}
+
+*::-webkit-scrollbar-track {
+  background: rgba(10, 15, 13, 0.5);
+  border-radius: 6px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: #10b981;
+  border-radius: 6px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: #059669;
+}
+
 a {
   font-weight: 500;
   color: #10b981;
