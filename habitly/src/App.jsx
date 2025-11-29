@@ -13,6 +13,14 @@ function App() {
     return <AuthForm />
   }
 
+  if (loading) {
+    return <div>Loading...</div>
+  }
+
+  if (!user) {
+    return <AuthForm />
+  }
+
   return (
     <div className="app">
       <h1>Welcome, {user.username}!</h1>
