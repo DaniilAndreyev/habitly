@@ -215,6 +215,14 @@
   min-height: 80px;
 }
 
+.char-counter {
+  display: block;
+  margin-top: 4px;
+  font-size: 0.75rem;
+  color: #64748b;
+  text-align: right;
+}
+
 .form-row {
   display: grid;
   grid-template-columns: 1fr 1fr;

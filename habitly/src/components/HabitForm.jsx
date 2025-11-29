@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { useHabits } from '../contexts/HabitContext';
 import './HabitForm.css';
 
-// Student-relevant habit presets
 const HABIT_PRESETS = [
   { name: 'Study 2 hours', category: 'study', difficulty: 'medium', icon: '📚' },
   { name: 'Sleep 8 hours', category: 'sleep', difficulty: 'medium', icon: '😴' },
@@ -101,7 +100,9 @@ export default function HabitForm({ onClose }) {
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                 placeholder="Add details about this habit..."
                 rows="3"
+                maxLength={20}
               />
+              <small className="char-counter">{formData.description.length}/20 characters</small>
             </div>
 
             <div className="form-row">
