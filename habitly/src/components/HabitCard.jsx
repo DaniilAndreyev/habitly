@@ -163,7 +163,16 @@ export default function HabitCard({ habit }) {
 
       {showBackfill && (
         <div className="backfill-section">
-          <p className="backfill-title">Log Past Days (No XP)</p>
+          <div className="backfill-header">
+            <p className="backfill-title">Log Past Days (No XP)</p>
+            <button 
+              className="backfill-close-button"
+              onClick={() => setShowBackfill(false)}
+              title="Close"
+            >
+              ✕
+            </button>
+          </div>
           <div className="backfill-days">
             {getPastDays(7).map((date, index) => {
               const isCompleted = isCompletedOnDate(habit.completedDates, date);

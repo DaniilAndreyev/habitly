@@ -62,10 +62,11 @@
 
 .habit-stats {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(2, auto);
+  gap: 10px;
   margin-bottom: 16px;
-  padding: 16px;
+  padding: 14px;
   background: rgba(10, 15, 13, 0.5);
   border-radius: 12px;
 }
@@ -74,26 +75,34 @@
   display: flex;
   align-items: center;
   gap: 8px;
+  min-width: 0;
+}
+
+.stat-item:last-child {
+  grid-column: 1 / -1;
+  justify-content: center;
 }
 
 .stat-emoji {
-  font-size: 1.5rem;
+  font-size: 1.35rem;
+  flex-shrink: 0;
 }
 
 .stat-info {
   display: flex;
   flex-direction: column;
   gap: 2px;
+  min-width: 0;
 }
 
 .stat-value {
-  font-size: 1.125rem;
+  font-size: 1.05rem;
   font-weight: 700;
   color: #f1f5f9;
 }
 
 .stat-label {
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   color: #64748b;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -189,19 +198,66 @@
 }
 
 .backfill-section {
-  margin-top: 16px;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
   padding: 16px;
-  background: rgba(10, 15, 13, 0.5);
-  border-radius: 12px;
-  border-top: 2px solid #1a3a2e;
+  background: linear-gradient(135deg, #111d16 0%, #0a0f0d 100%);
+  border-radius: 0 0 16px 16px;
+  border: 2px solid #10b981;
+  border-top: 2px solid #10b981;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+  z-index: 30;
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.backfill-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.backfill-close-button {
+  background: rgba(239, 68, 68, 0.1);
+  color: #f87171;
+  border: 2px solid #f87171;
+  border-radius: 8px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 1.25rem;
+  font-weight: 700;
+  transition: all 0.2s ease;
+  padding: 0;
+  line-height: 1;
+}
+
+.backfill-close-button:hover {
+  background: rgba(239, 68, 68, 0.2);
+  transform: scale(1.1);
 }
 
 .backfill-title {
-  margin: 0 0 12px 0;
+  margin: 0;
   font-size: 0.875rem;
   font-weight: 600;
   color: #94a3b8;
-  text-align: center;
 }
 
 .backfill-days {

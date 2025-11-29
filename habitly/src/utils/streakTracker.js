@@ -131,12 +131,6 @@ export const getCompletionRate = (completedDates, days = 7) => {
 };
 
 export const getStreakEmoji = (streak) => {
-  if (streak === 0) return '⚪';
-  if (streak < 3) return '🔥';
-  if (streak < 7) return '🔥🔥';
-  if (streak < 14) return '🔥🔥🔥';
-  if (streak < 30) return '💪🔥';
-  if (streak < 60) return '⚡🔥';
-  if (streak < 100) return '🚀🔥';
-  return '👑🔥';
+  if (streak === 0) return '🥚';
+  return '🔥';
 };
