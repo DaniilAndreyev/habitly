@@ -2,6 +2,7 @@ import { createContext, useContext, useState, useEffect } from 'react';
 
 const AuthContext = createContext(null);
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {
@@ -19,7 +20,9 @@ export const AuthProvider = ({ children }) => {
     const storedUser = localStorage.getItem('habitly_user');
     if (storedUser) {
       try {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setUser(JSON.parse(storedUser));
+      // eslint-disable-next-line no-unused-vars
       } catch (error) {
         localStorage.removeItem('habitly_user');
       }
