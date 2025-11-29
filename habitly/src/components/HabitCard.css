@@ -44,6 +44,9 @@
   font-size: 0.875rem;
   color: #94a3b8;
   line-height: 1.4;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  max-width: 100%;
 }
 
 .difficulty-badge {
@@ -102,6 +105,12 @@
   gap: 12px;
 }
 
+.footer-buttons {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
 .level-display {
   display: flex;
   flex-direction: column;
@@ -136,7 +145,7 @@
   box-shadow: 0 2px 4px rgba(16, 185, 129, 0.3);
 }
 
-.complete-button:hover {
+.complete-button:hover:not(:disabled) {
   transform: scale(1.05);
   box-shadow: 0 4px 8px rgba(16, 185, 129, 0.4);
 }
@@ -144,10 +153,94 @@
 .complete-button.completed {
   background: linear-gradient(135deg, #059669 0%, #047857 100%);
   box-shadow: 0 2px 4px rgba(5, 150, 105, 0.3);
+  cursor: not-allowed;
+  opacity: 0.8;
 }
 
 .complete-button.completed:hover {
-  box-shadow: 0 4px 8px rgba(5, 150, 105, 0.4);
+  transform: none;
+  box-shadow: 0 2px 4px rgba(5, 150, 105, 0.3);
+}
+
+.complete-button.processing {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.complete-button:disabled {
+  cursor: not-allowed;
+}
+
+.backfill-toggle-button {
+  padding: 10px 12px;
+  background: rgba(16, 185, 129, 0.1);
+  color: #10b981;
+  border: 2px solid #10b981;
+  border-radius: 10px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.backfill-toggle-button:hover {
+  background: rgba(16, 185, 129, 0.2);
+  transform: scale(1.05);
+}
+
+.backfill-section {
+  margin-top: 16px;
+  padding: 16px;
+  background: rgba(10, 15, 13, 0.5);
+  border-radius: 12px;
+  border-top: 2px solid #1a3a2e;
+}
+
+.backfill-title {
+  margin: 0 0 12px 0;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #94a3b8;
+  text-align: center;
+}
+
+.backfill-days {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+  gap: 8px;
+}
+
+.backfill-day {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 10px 8px;
+  background: rgba(17, 29, 22, 0.6);
+  border: 2px solid #1a3a2e;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.backfill-day:hover {
+  border-color: #10b981;
+  background: rgba(16, 185, 129, 0.1);
+}
+
+.backfill-day.completed {
+  border-color: #10b981;
+  background: rgba(16, 185, 129, 0.15);
+}
+
+.day-label {
+  font-size: 0.75rem;
+  color: #cbd5e1;
+  font-weight: 600;
+}
+
+.day-status {
+  font-size: 1.25rem;
+  color: #10b981;
 }
 
 .xp-popup {
@@ -181,6 +274,94 @@
   }
 }
 
+.level-up-popup {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 20;
+  border-radius: 16px;
+  animation: fadeIn 0.3s ease;
+}
+
+.level-up-content {
+  text-align: center;
+  padding: 24px;
+  animation: levelUpBounce 0.6s ease;
+}
+
+.level-up-content h3 {
+  margin: 0 0 12px 0;
+  font-size: 1.75rem;
+  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.level-up-content .new-level {
+  margin: 0 0 20px 0;
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #10b981;
+  text-shadow: 0 0 20px rgba(16, 185, 129, 0.5);
+}
+
+.milestone-reward {
+  margin-top: 16px;
+  padding: 16px;
+  background: rgba(16, 185, 129, 0.1);
+  border-radius: 12px;
+  border: 2px solid #10b981;
+}
+
+.reward-badge {
+  font-size: 3rem;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.reward-title {
+  margin: 0 0 4px 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #10b981;
+}
+
+.reward-description {
+  margin: 0;
+  font-size: 0.875rem;
+  color: #94a3b8;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes levelUpBounce {
+  0% {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
 @media (max-width: 640px) {
   .habit-stats {
     grid-template-columns: 1fr;
@@ -195,7 +376,17 @@
     align-items: stretch;
   }
 
-  .complete-button {
+  .footer-buttons {
     width: 100%;
+    flex-direction: column;
+  }
+
+  .complete-button,
+  .backfill-toggle-button {
+    width: 100%;
+  }
+
+  .backfill-days {
+    grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
   }
 }

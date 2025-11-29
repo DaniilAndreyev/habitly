@@ -1,29 +1,94 @@
 import { useState } from 'react';
 import { useHabits } from '../contexts/HabitContext';
-import { getStreakEmoji } from '../utils/streakTracker';
+import { getStreakEmoji, isCompletedOnDate } from '../utils/streakTracker';
+import { getMilestoneReward } from '../utils/levelSystem';
 import './HabitCard.css';
 
 export default function HabitCard({ habit }) {
   const { completeHabit, uncompleteHabit, getHabitStats, levelInfo } = useHabits();
   const [showSuccess, setShowSuccess] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
+  const [showLevelUp, setShowLevelUp] = useState(false);
+  const [levelUpData, setLevelUpData] = useState(null);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [showBackfill, setShowBackfill] = useState(false);
   
   const stats = getHabitStats(habit.id);
   
   if (!stats) return null;
 
   const handleComplete = async () => {
+    // Prevent multiple clicks while processing
+    if (isProcessing) return;
+    
+    // Don't allow toggling off completion for today - only backfill should be permitted
     if (stats.isCompletedToday) {
-      // Uncomplete if already done
-      uncompleteHabit(habit.id);
-    } else {
-      // Complete and show XP gain
-      const result = completeHabit(habit.id);
+      return;
+    }
+
+    setIsProcessing(true);
+    
+    // Complete and show XP gain
+    const result = completeHabit(habit.id);
+    
+    if (result.success) {
+      // Calculate XP with streak bonus
+      const streakBonus = result.newStreak > 1 ? Math.min(result.newStreak * 0.05, 1.0) : 0;
+      const totalXP = result.xpGained;
       
-      if (result.success) {
-        setShowSuccess(true);
-        setTimeout(() => setShowSuccess(false), 2000);
+      let message = `+${totalXP} XP! 🎉`;
+      if (streakBonus > 0) {
+        const bonusPercent = Math.round(streakBonus * 100);
+        message = `+${totalXP} XP! (+${bonusPercent}% streak bonus) 🔥`;
+      }
+      
+      setSuccessMessage(message);
+      setShowSuccess(true);
+      setTimeout(() => setShowSuccess(false), 2500);
+      
+      // Check for level up
+      if (result.leveledUp) {
+        const milestone = getMilestoneReward(result.newLevel);
+        setLevelUpData({
+          newLevel: result.newLevel,
+          milestone: milestone
+        });
+        setShowLevelUp(true);
+        setTimeout(() => setShowLevelUp(false), 4000);
       }
     }
+    
+    setIsProcessing(false);
+  };
+
+  const handleBackfillToggle = (date) => {
+    const isCompleted = isCompletedOnDate(habit.completedDates, date);
+    
+    if (isCompleted) {
+      // Remove completion for this date
+      uncompleteHabit(habit.id, date);
+    } else {
+      // Add completion for this date (no XP for backfill)
+      completeHabit(habit.id, date);
+    }
+  };
+
+  const getPastDays = (count = 7) => {
+    const days = [];
+    const today = new Date();
+    
+    for (let i = count - 1; i >= 1; i--) {
+      const date = new Date(today);
+      date.setDate(date.getDate() - i);
+      days.push(date);
+    }
+    
+    return days;
+  };
+
+  const formatDateLabel = (date) => {
+    const options = { month: 'short', day: 'numeric' };
+    return date.toLocaleDateString('en-US', options);
   };
 
   const getDifficultyColor = (difficulty) => {
@@ -84,17 +149,65 @@ export default function HabitCard({ habit }) {
           <span className="xp-text">{levelInfo.currentXP} / {levelInfo.xpForNextLevel} XP</span>
         </div>
 
-        <button 
-          className={`complete-button ${stats.isCompletedToday ? 'completed' : ''}`}
-          onClick={handleComplete}
-        >
-          {stats.isCompletedToday ? '✓ Done Today' : 'Complete'}
-        </button>
+        <div className="footer-buttons">
+          <button 
+            className={`complete-button ${stats.isCompletedToday ? 'completed' : ''} ${isProcessing ? 'processing' : ''}`}
+            onClick={handleComplete}
+            disabled={stats.isCompletedToday || isProcessing}
+          >
+            {stats.isCompletedToday ? '✓ Done Today' : isProcessing ? 'Processing...' : 'Complete'}
+          </button>
+          
+          <button 
+            className="backfill-toggle-button"
+            onClick={() => setShowBackfill(!showBackfill)}
+            title="Log past days"
+          >
+            📅
+          </button>
+        </div>
       </div>
+
+      {showBackfill && (
+        <div className="backfill-section">
+          <p className="backfill-title">Log Past Days (No XP)</p>
+          <div className="backfill-days">
+            {getPastDays(7).map((date, index) => {
+              const isCompleted = isCompletedOnDate(habit.completedDates, date);
+              return (
+                <button
+                  key={index}
+                  className={`backfill-day ${isCompleted ? 'completed' : ''}`}
+                  onClick={() => handleBackfillToggle(date)}
+                >
+                  <span className="day-label">{formatDateLabel(date)}</span>
+                  <span className="day-status">{isCompleted ? '✓' : '○'}</span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
 
       {showSuccess && (
         <div className="xp-popup">
-          +{habit.difficulty === 'easy' ? 10 : habit.difficulty === 'hard' ? 30 : 20} XP! 🎉
+          {successMessage}
+        </div>
+      )}
+      
+      {showLevelUp && levelUpData && (
+        <div className="level-up-popup">
+          <div className="level-up-content">
+            <h3>🎊 LEVEL UP! 🎊</h3>
+            <p className="new-level">Level {levelUpData.newLevel}</p>
+            {levelUpData.milestone && (
+              <div className="milestone-reward">
+                <span className="reward-badge">{levelUpData.milestone.badge}</span>
+                <p className="reward-title">{levelUpData.milestone.title}</p>
+                <p className="reward-description">{levelUpData.milestone.description}</p>
+              </div>
+            )}
+          </div>
         </div>
       )}
     </div>
