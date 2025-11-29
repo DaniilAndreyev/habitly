@@ -144,28 +144,21 @@ export default function HabitCard({ habit }) {
       </div>
 
       <div className="habit-footer">
-        <div className="level-display">
-          <span className="level-badge">Lv. {levelInfo.level}</span>
-          <span className="xp-text">{levelInfo.currentXP} / {levelInfo.xpForNextLevel} XP</span>
-        </div>
-
-        <div className="footer-buttons">
-          <button 
-            className={`complete-button ${stats.isCompletedToday ? 'completed' : ''} ${isProcessing ? 'processing' : ''}`}
-            onClick={handleComplete}
-            disabled={stats.isCompletedToday || isProcessing}
-          >
-            {stats.isCompletedToday ? '✓ Done Today' : isProcessing ? 'Processing...' : 'Complete'}
-          </button>
-          
-          <button 
-            className="backfill-toggle-button"
-            onClick={() => setShowBackfill(!showBackfill)}
-            title="Log past days"
-          >
-            📅
-          </button>
-        </div>
+        <button 
+          className={`complete-button ${stats.isCompletedToday ? 'completed' : ''} ${isProcessing ? 'processing' : ''}`}
+          onClick={handleComplete}
+          disabled={stats.isCompletedToday || isProcessing}
+        >
+          {stats.isCompletedToday ? '✓ Done Today' : isProcessing ? 'Processing...' : 'Complete'}
+        </button>
+        
+        <button 
+          className="backfill-toggle-button"
+          onClick={() => setShowBackfill(!showBackfill)}
+          title="Log past days"
+        >
+          📅
+        </button>
       </div>
 
       {showBackfill && (

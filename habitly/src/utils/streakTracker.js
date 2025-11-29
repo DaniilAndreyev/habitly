@@ -1,9 +1,5 @@
-/**
- * Streak Tracking Utilities
- * Handles streak calculations and date comparisons
- */
 
-// Check if a date is today
+
 export const isToday = (date) => {
   const today = new Date();
   const checkDate = new Date(date);
@@ -15,7 +11,6 @@ export const isToday = (date) => {
   );
 };
 
-// Check if a date is yesterday
 export const isYesterday = (date) => {
   const yesterday = new Date();
   yesterday.setDate(yesterday.getDate() - 1);
@@ -28,12 +23,10 @@ export const isYesterday = (date) => {
   );
 };
 
-// Get days between two dates
 export const getDaysBetween = (date1, date2) => {
   const d1 = new Date(date1);
   const d2 = new Date(date2);
   
-  // Reset hours to compare only dates
   d1.setHours(0, 0, 0, 0);
   d2.setHours(0, 0, 0, 0);
   
@@ -41,7 +34,6 @@ export const getDaysBetween = (date1, date2) => {
   return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 };
 
-// Format date to YYYY-MM-DD
 export const formatDateKey = (date) => {
   const d = new Date(date);
   const year = d.getFullYear();
@@ -50,22 +42,27 @@ export const formatDateKey = (date) => {
   return `${year}-${month}-${day}`;
 };
 
-// Calculate current streak from completion dates
 export const calculateStreak = (completedDates) => {
   if (!completedDates || completedDates.length === 0) return 0;
   
-  // Sort dates in descending order (newest first)
   const sortedDates = completedDates
     .map(d => new Date(d))
     .sort((a, b) => b - a);
   
-  // Start with the most recent date
-  const mostRecent = sortedDates[0];
+  const mostRecent = new Date(sortedDates[0]);
+  mostRecent.setHours(0, 0, 0, 0);
   
-  // Count consecutive days starting from most recent
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const yesterday = new Date(today);
+  yesterday.setDate(yesterday.getDate() - 1);
+  
+  if (mostRecent.getTime() !== today.getTime() && mostRecent.getTime() !== yesterday.getTime()) {
+    return 0; 
+  }
+  
   let streak = 1;
   let currentDate = new Date(mostRecent);
-  currentDate.setHours(0, 0, 0, 0);
   
   for (let i = 1; i < sortedDates.length; i++) {
     const prevDate = new Date(currentDate);
@@ -75,23 +72,20 @@ export const calculateStreak = (completedDates) => {
     const checkDate = new Date(sortedDates[i]);
     checkDate.setHours(0, 0, 0, 0);
     
-    // Check if this date is the day before the current date
     if (checkDate.getTime() === prevDate.getTime()) {
       streak++;
       currentDate = new Date(checkDate);
     } else {
-      break; // Streak broken
+      break; 
     }
   }
   
   return streak;
 };
 
-// Get longest streak from completion dates
 export const getLongestStreak = (completedDates) => {
   if (!completedDates || completedDates.length === 0) return 0;
   
-  // Sort dates in ascending order
   const sortedDates = completedDates
     .map(d => new Date(d))
     .sort((a, b) => a - b);
@@ -113,13 +107,11 @@ export const getLongestStreak = (completedDates) => {
   return longestStreak;
 };
 
-// Check if habit was completed on a specific date
 export const isCompletedOnDate = (completedDates, date) => {
   const checkKey = formatDateKey(date);
   return completedDates.some(d => formatDateKey(d) === checkKey);
 };
 
-// Get completion rate for last N days
 export const getCompletionRate = (completedDates, days = 7) => {
   const startDate = new Date();
   startDate.setDate(startDate.getDate() - days + 1);
@@ -138,7 +130,6 @@ export const getCompletionRate = (completedDates, days = 7) => {
   return Math.round((completedCount / days) * 100);
 };
 
-// Get streak emoji based on streak count
 export const getStreakEmoji = (streak) => {
   if (streak === 0) return '⚪';
   if (streak < 3) return '🔥';
