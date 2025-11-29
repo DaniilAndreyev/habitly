@@ -313,6 +313,15 @@
   text-shadow: 0 0 20px rgba(16, 185, 129, 0.5);
 }
 
+.rank-up-image {
+  width: 220px;
+  height: 220px;
+  object-fit: contain;
+  filter: drop-shadow(0 12px 24px rgba(16, 185, 129, 0.4));
+  animation: float 3s ease-in-out infinite;
+  border-radius: 12px;
+}
+
 .milestone-reward {
   margin-top: 16px;
   padding: 16px;
