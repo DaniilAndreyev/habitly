@@ -208,3 +208,4 @@ Distributed under the Unlicense License.
 - [Vite](https://vitejs.dev/) - Build tool
 - [React](https://react.dev/) - UI library
 - [Best-README-Template](https://github.com/othneildrew/Best-README-Template) - README inspiration
+- [Rank Assets](https://rivalskins.com/assets/rank-logos/) - Assets Used in the project
