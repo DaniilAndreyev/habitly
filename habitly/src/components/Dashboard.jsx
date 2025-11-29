@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useHabits } from '../contexts/HabitContext';
 import { useAuth } from '../contexts/AuthContext';
 import HabitCard from './HabitCard';
@@ -8,10 +8,24 @@ import './Dashboard.css';
 
 export default function Dashboard() {
   const { user, logout } = useAuth();
-  const { habits, levelInfo } = useHabits();
+  const { habits, levelInfo, addDebugXP } = useHabits();
   const [showHabitForm, setShowHabitForm] = useState(false);
 
   const rankInfo = getRankInfo(levelInfo.level);
+
+  // Debug: Press Enter to add 100 XP
+  useEffect(() => {
+    const handler = (e) => {
+      if (e.key === 'Enter') {
+        // Avoid adding XP when focusing on input elements
+        const tag = e.target.tagName.toLowerCase();
+        if (['input','textarea','button'].includes(tag)) return;
+        addDebugXP(100);
+      }
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, [addDebugXP]);
 
   return (
     <div className="dashboard">

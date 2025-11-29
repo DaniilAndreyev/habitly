@@ -232,6 +232,12 @@ export const HabitProvider = ({ children }) => {
     };
   };
 
+  // Debug: add XP manually (e.g., via Enter key)
+  const addDebugXP = (amount = 100) => {
+    if (!user) return;
+    setTotalXP(prev => prev + amount);
+  };
+
   const value = {
     habits,
     totalXP,
@@ -242,6 +248,7 @@ export const HabitProvider = ({ children }) => {
     completeHabit,
     uncompleteHabit,
     getHabitStats,
+    addDebugXP,
   };
 
   return <HabitContext.Provider value={value}>{children}</HabitContext.Provider>;

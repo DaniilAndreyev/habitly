@@ -5,10 +5,10 @@
 
 // XP required for each level (exponential growth)
 export const calculateXPForLevel = (level) => {
-  // Level 1: 100 XP, Level 2: 150 XP, Level 3: 225 XP, etc.
-  // Formula: baseXP * (1.5 ^ (level - 1))
   const baseXP = 100;
-  return Math.floor(baseXP * Math.pow(1.5, level - 1));
+  const increment = 35;
+  const milestoneBonus = Math.floor((level - 1) / 10) * 50;
+  return baseXP + (level - 1) * increment + milestoneBonus;
 };
 
 // Get total XP needed to reach a specific level
