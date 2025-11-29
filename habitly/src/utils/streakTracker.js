@@ -59,30 +59,26 @@ export const calculateStreak = (completedDates) => {
     .map(d => new Date(d))
     .sort((a, b) => b - a);
   
-  // Check if most recent completion is today or yesterday
+  // Start with the most recent date
   const mostRecent = sortedDates[0];
-  if (!isToday(mostRecent) && !isYesterday(mostRecent)) {
-    return 0; // Streak broken
-  }
   
-  // Count consecutive days
+  // Count consecutive days starting from most recent
   let streak = 1;
   let currentDate = new Date(mostRecent);
+  currentDate.setHours(0, 0, 0, 0);
   
   for (let i = 1; i < sortedDates.length; i++) {
     const prevDate = new Date(currentDate);
     prevDate.setDate(prevDate.getDate() - 1);
+    prevDate.setHours(0, 0, 0, 0);
     
-    const checkDate = sortedDates[i];
+    const checkDate = new Date(sortedDates[i]);
+    checkDate.setHours(0, 0, 0, 0);
     
     // Check if this date is the day before the current date
-    if (
-      checkDate.getDate() === prevDate.getDate() &&
-      checkDate.getMonth() === prevDate.getMonth() &&
-      checkDate.getFullYear() === prevDate.getFullYear()
-    ) {
+    if (checkDate.getTime() === prevDate.getTime()) {
       streak++;
-      currentDate = checkDate;
+      currentDate = new Date(checkDate);
     } else {
       break; // Streak broken
     }

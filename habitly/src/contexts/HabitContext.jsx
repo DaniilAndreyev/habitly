@@ -123,7 +123,7 @@ export const HabitProvider = ({ children }) => {
     
     // Check if already completed on this date
     if (isCompletedOnDate(habit.completedDates, date)) {
-      return { success: false, error: 'Already completed today' };
+      return { success: false, error: 'Already completed on this date' };
     }
 
     // Add completion date
@@ -132,8 +132,15 @@ export const HabitProvider = ({ children }) => {
     // Calculate new streak
     const newStreak = calculateStreak(updatedDates);
     
-    // Calculate XP reward
-    const xpGained = calculateHabitXP(newStreak, habit.difficulty);
+    // Determine if this is a backfill (past date) or current completion
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const completionDate = new Date(date);
+    completionDate.setHours(0, 0, 0, 0);
+    const isBackfill = completionDate < today;
+    
+    // Calculate XP reward only for today's completion
+    const xpGained = isBackfill ? 0 : calculateHabitXP(newStreak, habit.difficulty);
     
     // Update habit
     setHabits(prev => prev.map(h => 
@@ -142,19 +149,27 @@ export const HabitProvider = ({ children }) => {
         : h
     ));
 
-    // Add XP
-    const newTotalXP = totalXP + xpGained;
-    const oldLevel = levelInfo.level;
-    const newLevelInfo = getLevelFromXP(newTotalXP);
+    // Add XP only if not backfill
+    let leveledUp = false;
+    let newLevel = levelInfo.level;
     
-    setTotalXP(newTotalXP);
+    if (!isBackfill && xpGained > 0) {
+      const newTotalXP = totalXP + xpGained;
+      const oldLevel = levelInfo.level;
+      const newLevelInfo = getLevelFromXP(newTotalXP);
+      
+      setTotalXP(newTotalXP);
+      leveledUp = newLevelInfo.level > oldLevel;
+      newLevel = newLevelInfo.level;
+    }
 
     return { 
       success: true, 
       xpGained,
       newStreak,
-      leveledUp: newLevelInfo.level > oldLevel,
-      newLevel: newLevelInfo.level
+      leveledUp,
+      newLevel,
+      isBackfill
     };
   };
 
