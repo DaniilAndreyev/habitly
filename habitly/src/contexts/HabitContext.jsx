@@ -8,7 +8,9 @@ import {
 } from '../utils/streakTracker';
 import { 
   calculateHabitXP, 
-  getLevelFromXP 
+  getLevelFromXP,
+  getRankInfo,
+  getNextRankInfo
 } from '../utils/levelSystem';
 
 const HabitContext = createContext(null);
@@ -31,7 +33,9 @@ export const HabitProvider = ({ children }) => {
     currentXP: 0,
     xpForNextLevel: 100,
     progress: 0,
-    totalXP: 0
+    totalXP: 0,
+    rank: getRankInfo(1),
+    nextRank: getNextRankInfo(1)
   });
 
   // Load user's habits and XP from localStorage
@@ -67,7 +71,12 @@ export const HabitProvider = ({ children }) => {
     if (storedXP) {
       const xp = parseInt(storedXP, 10);
       setTotalXP(xp);
-      setLevelInfo(getLevelFromXP(xp));
+      const li = getLevelFromXP(xp);
+      setLevelInfo({
+        ...li,
+        rank: getRankInfo(li.level),
+        nextRank: getNextRankInfo(li.level)
+      });
     }
   }, [user]);
 
@@ -84,7 +93,12 @@ export const HabitProvider = ({ children }) => {
     if (user) {
       const xpKey = `habitly_xp_${user.username}`;
       localStorage.setItem(xpKey, totalXP.toString());
-      setLevelInfo(getLevelFromXP(totalXP));
+      const li = getLevelFromXP(totalXP);
+      setLevelInfo({
+        ...li,
+        rank: getRankInfo(li.level),
+        nextRank: getNextRankInfo(li.level)
+      });
     }
   }, [totalXP, user]);
 
@@ -159,6 +173,11 @@ export const HabitProvider = ({ children }) => {
       const newLevelInfo = getLevelFromXP(newTotalXP);
       
       setTotalXP(newTotalXP);
+      setLevelInfo({
+        ...newLevelInfo,
+        rank: getRankInfo(newLevelInfo.level),
+        nextRank: getNextRankInfo(newLevelInfo.level)
+      });
       leveledUp = newLevelInfo.level > oldLevel;
       newLevel = newLevelInfo.level;
     }

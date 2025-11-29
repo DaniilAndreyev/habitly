@@ -55,38 +55,45 @@ export const calculateHabitXP = (streak, habitDifficulty = 'medium') => {
   return Math.floor(base * (1 + streakBonus));
 };
 
-// Milestone rewards (every 5 levels)
-export const getMilestoneReward = (level) => {
-  if (level % 5 !== 0) return null;
-  
-  const rewards = {
-    5: { badge: '🌱', title: 'Seedling', description: 'Started your journey!' },
-    10: { badge: '🌿', title: 'Growing Strong', description: 'Building momentum!' },
-    15: { badge: '🌳', title: 'Mighty Oak', description: 'Habits taking root!' },
-    20: { badge: '⭐', title: 'Rising Star', description: 'Shining bright!' },
-    25: { badge: '💎', title: 'Diamond Mind', description: 'Unbreakable discipline!' },
-    30: { badge: '👑', title: 'Habit Master', description: 'True dedication!' },
-    35: { badge: '🚀', title: 'Sky Rocket', description: 'Reaching new heights!' },
-    40: { badge: '🔥', title: 'On Fire', description: 'Unstoppable force!' },
-    45: { badge: '🏆', title: 'Champion', description: 'Elite performance!' },
-    50: { badge: '🌟', title: 'Legend', description: 'Legendary commitment!' }
-  };
-  
-  return rewards[level] || { 
-    badge: '🎖️', 
-    title: `Level ${level} Elite`, 
-    description: 'Keep going strong!' 
+// Rank images (file names without spaces)
+import bronze from '../assets/rank-bronze.png';
+import silver from '../assets/rank-silver.webp';
+import gold from '../assets/rank-gold.webp';
+import platinum from '../assets/rank-platinum.webp';
+import diamond from '../assets/rank-diamond.webp';
+import grandmaster from '../assets/rank-grandmaster.webp';
+import celestial from '../assets/rank-celestial.webp';
+import eternity from '../assets/rank-eternity.webp';
+import oneAboveAll from '../assets/rank-one-above-all.webp';
+
+// Rank definitions based on level ranges
+export const rankDefinitions = [
+  { minLevel: 1, maxLevel: 4, key: 'bronze', title: 'Bronze', image: bronze },
+  { minLevel: 5, maxLevel: 9, key: 'silver', title: 'Silver', image: silver },
+  { minLevel: 10, maxLevel: 14, key: 'gold', title: 'Gold', image: gold },
+  { minLevel: 15, maxLevel: 19, key: 'platinum', title: 'Platinum', image: platinum },
+  { minLevel: 20, maxLevel: 24, key: 'diamond', title: 'Diamond', image: diamond },
+  { minLevel: 25, maxLevel: 29, key: 'grandmaster', title: 'Grandmaster', image: grandmaster },
+  { minLevel: 30, maxLevel: 39, key: 'celestial', title: 'Celestial', image: celestial },
+  { minLevel: 40, maxLevel: 49, key: 'eternity', title: 'Eternity', image: eternity },
+  { minLevel: 50, maxLevel: Infinity, key: 'oneAboveAll', title: 'One Above All', image: oneAboveAll }
+];
+
+export const getRankInfo = (level) => {
+  return rankDefinitions.find(r => level >= r.minLevel && level <= r.maxLevel) || rankDefinitions[0];
+};
+
+export const getNextRankInfo = (level) => {
+  const currentIndex = rankDefinitions.findIndex(r => level >= r.minLevel && level <= r.maxLevel);
+  if (currentIndex === -1) return null;
+  const next = rankDefinitions[currentIndex + 1];
+  if (!next) return null;
+  return {
+    ...next,
+    levelsRemaining: Math.max(next.minLevel - level, 0)
   };
 };
 
-// Get rank title based on level
-export const getRankTitle = (level) => {
-  if (level < 5) return 'Beginner';
-  if (level < 10) return 'Novice';
-  if (level < 15) return 'Intermediate';
-  if (level < 20) return 'Advanced';
-  if (level < 30) return 'Expert';
-  if (level < 40) return 'Master';
-  if (level < 50) return 'Grandmaster';
-  return 'Legend';
-};
+export const getRankTitle = (level) => getRankInfo(level).title;
+
+export default getRankInfo;

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useHabits } from '../contexts/HabitContext';
 import { getStreakEmoji, isCompletedOnDate } from '../utils/streakTracker';
-import { getMilestoneReward } from '../utils/levelSystem';
+import { getRankInfo } from '../utils/levelSystem';
 import './HabitCard.css';
 
 export default function HabitCard({ habit }) {
@@ -9,7 +9,7 @@ export default function HabitCard({ habit }) {
   const [showSuccess, setShowSuccess] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
   const [showLevelUp, setShowLevelUp] = useState(false);
-  const [levelUpData, setLevelUpData] = useState(null);
+  const [oldRank, setOldRank] = useState(getRankInfo(levelInfo.level));
   const [isProcessing, setIsProcessing] = useState(false);
   const [showBackfill, setShowBackfill] = useState(false);
   
@@ -48,13 +48,13 @@ export default function HabitCard({ habit }) {
       
       // Check for level up
       if (result.leveledUp) {
-        const milestone = getMilestoneReward(result.newLevel);
-        setLevelUpData({
-          newLevel: result.newLevel,
-          milestone: milestone
-        });
-        setShowLevelUp(true);
-        setTimeout(() => setShowLevelUp(false), 4000);
+        const previousRank = oldRank;
+        const newRank = getRankInfo(result.newLevel);
+        if (previousRank.key !== newRank.key) {
+          setShowLevelUp(true);
+          setTimeout(() => setShowLevelUp(false), 3500);
+        }
+        setOldRank(newRank);
       }
     }
     
@@ -195,18 +195,12 @@ export default function HabitCard({ habit }) {
         </div>
       )}
       
-      {showLevelUp && levelUpData && (
+      {showLevelUp && (
         <div className="level-up-popup">
           <div className="level-up-content">
-            <h3>🎊 LEVEL UP! 🎊</h3>
-            <p className="new-level">Level {levelUpData.newLevel}</p>
-            {levelUpData.milestone && (
-              <div className="milestone-reward">
-                <span className="reward-badge">{levelUpData.milestone.badge}</span>
-                <p className="reward-title">{levelUpData.milestone.title}</p>
-                <p className="reward-description">{levelUpData.milestone.description}</p>
-              </div>
-            )}
+            <h3>🎊 RANK UP! 🎊</h3>
+            <p className="new-level">Rank: {getRankInfo(levelInfo.level).title}</p>
+            <img src={getRankInfo(levelInfo.level).image} alt={getRankInfo(levelInfo.level).title} className="rank-up-image" />
           </div>
         </div>
       )}

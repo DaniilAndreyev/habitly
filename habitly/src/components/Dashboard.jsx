@@ -3,7 +3,7 @@ import { useHabits } from '../contexts/HabitContext';
 import { useAuth } from '../contexts/AuthContext';
 import HabitCard from './HabitCard';
 import HabitForm from './HabitForm';
-import { getRankTitle, getMilestoneReward } from '../utils/levelSystem';
+import { getRankInfo } from '../utils/levelSystem';
 import './Dashboard.css';
 
 export default function Dashboard() {
@@ -11,8 +11,7 @@ export default function Dashboard() {
   const { habits, levelInfo } = useHabits();
   const [showHabitForm, setShowHabitForm] = useState(false);
 
-  const milestone = getMilestoneReward(levelInfo.level);
-  const rankTitle = getRankTitle(levelInfo.level);
+  const rankInfo = getRankInfo(levelInfo.level);
 
   return (
     <div className="dashboard">
@@ -32,32 +31,33 @@ export default function Dashboard() {
       <div className="dashboard-content">
         {/* Level & XP Progress Section */}
         <div className="level-section">
-          <div className="level-header">
-          <div className="level-info">
-            <h2 className="level-title">
-              Level {levelInfo.level} 
-              <span className="rank-badge">{rankTitle}</span>
-            </h2>
-            {milestone && (
-              <div className="milestone-badge">
-                <span className="milestone-emoji">{milestone.badge}</span>
-                <span className="milestone-text">{milestone.title}</span>
-              </div>
-            )}
+          {/* Rank Display at Top */}
+          <div className="rank-display">
+            <img 
+              src={rankInfo.image} 
+              alt={rankInfo.title}
+              className="rank-image"
+            />
+            <div className="rank-info">
+              <h2 className="rank-title">{rankInfo.title}</h2>
+              <p className="level-subtitle">Level {levelInfo.level}</p>
+            </div>
           </div>
+          
+          {/* XP Progress Bar at Bottom */}
+          <div className="xp-section">
             <div className="xp-numbers">
               <span className="xp-current">{levelInfo.currentXP}</span>
               <span className="xp-separator">/</span>
               <span className="xp-total">{levelInfo.xpForNextLevel} XP</span>
             </div>
-          </div>
-          
-          <div className="progress-bar-container">
-            <div 
-              className="progress-bar-fill"
-              style={{ width: `${levelInfo.progress}%` }}
-            >
-              <span className="progress-percentage">{Math.round(levelInfo.progress)}%</span>
+            <div className="progress-bar-container">
+              <div 
+                className="progress-bar-fill"
+                style={{ width: `${levelInfo.progress}%` }}
+              >
+                <span className="progress-percentage">{Math.round(levelInfo.progress)}%</span>
+              </div>
             </div>
           </div>
         </div>
